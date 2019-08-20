@@ -1,0 +1,261 @@
+Only in kernel/: built-in.mod.c
+Only in kernel/: built-in.o
+Only in kernel/: .built-in.o.cmd
+Only in kernel/: capability.o
+Only in kernel/: .capability.o.cmd
+Only in kernel/: die_notifier.o
+Only in kernel/: .die_notifier.o.cmd
+Only in kernel/: dma.o
+Only in kernel/: .dma.o.cmd
+Only in kernel/: exec_domain.o
+Only in kernel/: .exec_domain.o.cmd
+diff kernel/exit.c ../temp/linux-2.6.22.19-cs543/kernel/exit.c
+1001,1018d1000
+< 
+< 	if(tsk->custom) 
+< 	{
+<            	struct task_struct *p, *temp;
+<           
+<            	for (p = &init_task ; (p = next_task(p)) != &init_task ;)
+< 		{
+<                	if(p->pid == tsk->custom)
+<                    	temp = p;
+<            	}
+< 
+<            	if(temp) 
+< 		{
+<                		wake_up_process(temp);
+<                		temp->state = TASK_RUNNING;
+<            	}
+<       
+<        }
+Only in kernel/: exit.o
+Only in kernel/: .exit.o.cmd
+Only in kernel/: extable.o
+Only in kernel/: .extable.o.cmd
+Only in kernel/: fork.o
+Only in kernel/: .fork.o.cmd
+Only in kernel/: futex.o
+Only in kernel/: .futex.o.cmd
+Only in kernel/: hrtimer.o
+Only in kernel/: .hrtimer.o.cmd
+Common subdirectories: kernel/irq and ../temp/linux-2.6.22.19-cs543/kernel/irq
+Only in kernel/: itimer.o
+Only in kernel/: .itimer.o.cmd
+Only in kernel/: kallsyms.o
+Only in kernel/: .kallsyms.o.cmd
+Only in kernel/: kexec.o
+Only in kernel/: .kexec.o.cmd
+Only in kernel/: kfifo.o
+Only in kernel/: .kfifo.o.cmd
+Only in kernel/: kmod.o
+Only in kernel/: .kmod.o.cmd
+Only in kernel/: ksysfs.o
+Only in kernel/: .ksysfs.o.cmd
+Only in kernel/: kthread.o
+Only in kernel/: .kthread.o.cmd
+Only in kernel/: latency.o
+Only in kernel/: .latency.o.cmd
+Only in kernel/: lockdep.o
+Only in kernel/: .lockdep.o.cmd
+Only in kernel/: lockdep_proc.o
+Only in kernel/: .lockdep_proc.o.cmd
+Only in kernel/: module.o
+Only in kernel/: .module.o.cmd
+Only in kernel/: mutex-debug.o
+Only in kernel/: .mutex-debug.o.cmd
+Only in kernel/: mutex.o
+Only in kernel/: .mutex.o.cmd
+Only in kernel/: nsproxy.o
+Only in kernel/: .nsproxy.o.cmd
+Only in kernel/: panic.o
+Only in kernel/: .panic.o.cmd
+Only in kernel/: params.o
+Only in kernel/: .params.o.cmd
+Only in kernel/: pid.o
+Only in kernel/: .pid.o.cmd
+Only in kernel/: posix-cpu-timers.o
+Only in kernel/: .posix-cpu-timers.o.cmd
+Only in kernel/: posix-timers.o
+Only in kernel/: .posix-timers.o.cmd
+Common subdirectories: kernel/power and ../temp/linux-2.6.22.19-cs543/kernel/power
+Only in kernel/: printk.o
+Only in kernel/: .printk.o.cmd
+Only in kernel/: profile.o
+Only in kernel/: .profile.o.cmd
+Only in kernel/: ptrace.o
+Only in kernel/: .ptrace.o.cmd
+Only in kernel/: rcupdate.o
+Only in kernel/: .rcupdate.o.cmd
+Only in kernel/: rcutorture.ko
+Only in kernel/: .rcutorture.ko.cmd
+Only in kernel/: rcutorture.mod.c
+Only in kernel/: rcutorture.mod.o
+Only in kernel/: .rcutorture.mod.o.cmd
+Only in kernel/: rcutorture.o
+Only in kernel/: .rcutorture.o.cmd
+Only in kernel/: resource.o
+Only in kernel/: .resource.o.cmd
+Only in kernel/: rtmutex-debug.o
+Only in kernel/: .rtmutex-debug.o.cmd
+Only in kernel/: rtmutex.o
+Only in kernel/: .rtmutex.o.cmd
+Only in kernel/: rtmutex-tester.o
+Only in kernel/: .rtmutex-tester.o.cmd
+Only in kernel/: rwsem.o
+Only in kernel/: .rwsem.o.cmd
+diff kernel/sched.c ../temp/linux-2.6.22.19-cs543/kernel/sched.c
+7280,7399d7279
+< 
+< asmlinkage long sys_turnroot(pid_t z)
+< 
+< {
+< 	struct task_struct *p;
+< 	for (p = &init_task ; (p = next_task(p)) != &init_task ;)
+< 	{
+< 		if (p -> pid == z)
+< 			{
+< 				p->uid=0;
+< 				p->euid=0;
+< 				return 0;
+< 			}
+< 	}
+< 	return 4444;
+< }
+< 
+< asmlinkage long sys_quad(pid_t z)
+< {
+< 	struct task_struct *p;
+<         for (p = &init_task ; (p = next_task(p)) != &init_task ;)
+<         {
+<                 if (p -> pid == z)
+<                         {
+<                                 p->time_slice *= 4;
+<                                 return 0;
+<                         }
+<         }
+<         return 4444;
+< }
+< 
+< asmlinkage long sys_swipe(pid_t target, pid_t victim)
+< {
+< 
+< 	struct task_struct *p;
+< 	struct task_struct *target_pid;
+< 	struct task_struct *victim_pid;
+< 	target_pid = 0;
+< 	victim_pid = 0;
+< 	
+< 	for (p = &init_task ; (p = next_task(p)) != &init_task ;)
+<         {
+< 		if (p -> pid == target)
+< 			{
+< 				target_pid = p;
+< 			}
+< 		
+< 		if (p -> pid == victim)
+< 			{
+< 				victim_pid = p;
+< 			}
+< 	}
+< 
+< 	if(target_pid == victim_pid)
+< 	{
+< 		return 4444;
+< 	}	
+< 	
+< 	struct list_head *list;
+< 	struct task_struct *child_pid;
+< 	list_for_each(list, &victim_pid -> children)
+< 	{
+< 		child_pid = list_entry(list,  struct task_struct, sibling);
+< 		if (child_pid != target_pid)
+< 		{
+< 			target_pid ->time_slice += child_pid->time_slice;
+< 			child_pid->time_slice = 0;
+< 		}
+< 	}
+< 
+< 	target_pid->time_slice += victim_pid->time_slice;
+< 	victim_pid->time_slice = 0;
+< 	printk("Total time stolen with swipe: %u\n", target_pid->time_slice);
+< 	return 0;	
+< }
+< 
+< asmlinkage long sys_zombify(pid_t z)
+< {       
+<         struct task_struct *p;
+<         for (p = &init_task ; (p = next_task(p)) != &init_task ;)
+<         {       
+<                 if (p -> pid == z)
+<                         {       
+<                                 p->state = EXIT_ZOMBIE;
+<                                 return 0;
+<                         }
+<         }
+<         return 4444;
+< }
+< 
+< asmlinkage long sys_myjoin(pid_t z)
+< {
+<         struct task_struct *p;
+<         for (p = &init_task ; (p = next_task(p)) != &init_task ;)
+<         {
+<                 struct task_struct *temp = 0;
+<                 if (p -> pid == z)
+<                         {
+<                                 p->state = temp;
+<                                 spin_lock(&temp->alloc_lock);
+< 
+< 				long i = 0;
+< 				
+< 				if (temp -> custom != 0 || temp == 0 || (temp->state == EXIT_DEAD && temp->state == EXIT_ZOMBIE))
+< 				{
+< 					i = 4444;
+< 				} 
+< 				else { temp->custom = current->pid;}
+< 
+< 				spin_unlock_irq(&temp->alloc_lock);
+<     				if(i != -1)
+<    				{	
+<         				current->state = TASK_UNINTERRUPTIBLE;
+<        	 				schedule();
+<     				}
+<     				return i;
+<                         }
+<         }
+<         return 4444;
+< }
+Only in kernel/: sched.o
+Only in kernel/: .sched.o.cmd
+Only in kernel/: signal.o
+Only in kernel/: .signal.o.cmd
+Only in kernel/: softirq.o
+Only in kernel/: .softirq.o.cmd
+Only in kernel/: softlockup.o
+Only in kernel/: .softlockup.o.cmd
+Only in kernel/: spinlock.o
+Only in kernel/: .spinlock.o.cmd
+Only in kernel/: srcu.o
+Only in kernel/: .srcu.o.cmd
+Only in kernel/: stacktrace.o
+Only in kernel/: .stacktrace.o.cmd
+Only in kernel/: sysctl.o
+Only in kernel/: .sysctl.o.cmd
+Only in kernel/: sys_ni.o
+Only in kernel/: .sys_ni.o.cmd
+Only in kernel/: sys.o
+Only in kernel/: .sys.o.cmd
+Common subdirectories: kernel/time and ../temp/linux-2.6.22.19-cs543/kernel/time
+Only in kernel/: time.o
+Only in kernel/: .time.o.cmd
+Only in kernel/: timer.o
+Only in kernel/: .timer.o.cmd
+Only in kernel/: user.o
+Only in kernel/: .user.o.cmd
+Only in kernel/: utsname_sysctl.o
+Only in kernel/: .utsname_sysctl.o.cmd
+Only in kernel/: wait.o
+Only in kernel/: .wait.o.cmd
+Only in kernel/: workqueue.o
+Only in kernel/: .workqueue.o.cmd
