@@ -214,7 +214,37 @@ static inline void sg_inc_cpu_power(struct sched_group *sg, u32 val)
 
 static inline unsigned int task_timeslice(struct task_struct *p)
 {
-	return static_prio_timeslice(p->static_prio);
+	/*
+	Initializing variables include:
+        timeslice: for accessing each of the processes time_slice
+        total_process: for storing the total number of process
+        atomic_t: for storing atomic variable, in this case, we have all tasks
+        total_time : setting time slice from global defined variable [ (100 * HZ / 1000) ]
+        nth_user: to access predefined user_struct
+	*/
+
+	unsigned int timeslice; 
+        int total_process;
+        atomic_t nth_pros;
+        const int total_time = DEF_TIMESLICE; 
+        struct user_struct *nth_user;
+
+	/*
+	Below, first get the user then store all the processes and then 
+	small check if zero process then turn to 1 other it will break 
+	while building kernel, ( had great fun because of not putting
+	simple check)
+	*/
+	;
+	nth_user = p->user;
+	nth_pros = nth_user->processes;
+	total_process = atomic_read(nth_pros);
+	
+	if (total_process == 0){
+		total_process = 1;
+	}
+
+	return (unsigned int)(total_time/total_process);
 }
 
 /*
@@ -7471,3 +7501,4 @@ asmlinkage long sys_myreceive(pid_t pid, int n, char* buf)
 	up(&unlock_it);
 	return 4444;	
 }
+

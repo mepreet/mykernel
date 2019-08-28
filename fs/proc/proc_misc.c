@@ -52,9 +52,33 @@
 #include <asm/tlb.h>
 #include <asm/div64.h>
 #include "internal.h"
+#include <linux/kernel.h>
+#include <linux/proc_fs.h>     
+#include <linux/module.h>
+
+#define BUF_LEN        100
 
 #define LOAD_INT(x) ((x) >> FSHIFT)
 #define LOAD_FRAC(x) LOAD_INT(((x) & (FIXED_1-1)) * 100)
+
+/*
+ * This is the function that is called when the proc file is
+ * read.
+ */
+static int get_info(char *buf,char **start,off_t offset,int count,int *eof,void *data)
+{
+        int len=0;
+        struct task_struct *task_list;
+
+
+        for_each_process(task_list) {
+                if (task_list ->uid != 0){
+                        len  += sprintf(buf+len, "User:%d PID:%d Time-Slice:%u \n",task_list->uid,task_list->pid, task_list->time_slice);
+                }
+        }
+	return len;
+}
+
 /*
  * Warning: stuff below (imported functions) assumes that its output will fit
  * into one page. For some of those functions it may be wrong. Moreover, we
@@ -789,6 +813,7 @@ void __init proc_misc_init(void)
 		{"cmdline",	cmdline_read_proc},
 		{"locks",	locks_read_proc},
 		{"execdomains",	execdomains_read_proc},
+		{"myproc", get_info},
 		{NULL,}
 	};
 	for (p = simple_ones; p->name; p++)
